@@ -92,16 +92,16 @@ def cover_column(col):
     col.right.left = col.left
     col.left.right = col.right
     # Loop over all 1 nodes in the column.
-    node = col.down
-    while node != col:
-        row_node = node.right
+    col_node = col.down
+    while col_node != col:
+        row_node = col_node.right
         # Remove all 1 nodes from other columns in this row.
-        while row_node != node:
+        while row_node != col_node:
             row_node.down.up = row_node.up
             row_node.up.down = row_node.down
             row_node = row_node.right
             row_node.column.size -= 1
-        node = node.down
+        col_node = col_node.down
     col.size -= 1
 
 
@@ -132,10 +132,14 @@ def uncover_column(col):
 
 
 def print_rows(rows, level):
-    solution = []
+    print '---'
     for row in rows[:level]:
-        solution.append(row.column.name)
-    print ' '.join(solution)
+        solution = [row.column.name]
+        o = row.right
+        while o != row:
+            solution.append(o.column.name)
+            o = o.right
+        print ' '.join(sorted(solution))
 
 
 def search(head, rows=None, callback=print_rows, level=0):
@@ -166,6 +170,7 @@ def search(head, rows=None, callback=print_rows, level=0):
     cover_column(min_col)
     row = min_col.down
     while row != min_col:
+        logging.debug('Row %s', row.column.name)
         rows[level] = row
         col = row.right
         while col != row:

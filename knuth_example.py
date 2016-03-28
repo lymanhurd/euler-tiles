@@ -18,6 +18,6 @@ example_matrix = (
 )
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.WARN)
     head = make_objects(example_matrix, example_column_names)
     search(head)
