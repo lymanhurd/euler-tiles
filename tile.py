@@ -24,15 +24,15 @@ def enumerate_board(board):
     return counter, enumerated
 
 
-def covered_indices(board, tile, i, j):
+def covered_indices(board, tile, r, c):
     indices = []
     for y in range(len(tile)):
         for x in range(len(tile[0])):
             if tile[y][x] != ' ':
-                if board[y + j][x + i] == -1:
+                if board[y + r][x + c] == -1:
                     return []
                 else:
-                    indices.append(board[y + j][x + i])
+                    indices.append(board[y + r][x + c])
     return indices
 
 
@@ -41,6 +41,7 @@ def cover_matrix(board, tiles):
     num_tiles = len(tiles)
     num_board, enumerated = enumerate_board(board)
     matrix = []
+    # reduce symmetries by truncating one tile with maximal symmetry to a single one.
     for tile_num in range(num_tiles):
         sym_list = symmetries(tiles[tile_num])
         for t in sym_list:
@@ -57,9 +58,25 @@ def cover_matrix(board, tiles):
     return matrix
 
 
+def naive_solve(solution, rows):
+    logging.info(len(solution))
+    if not rows:
+        print solution
+    else:
+        for i in range(len(rows)):
+            for s in solution:
+                if max([sum(z) for z in zip(rows[i], s)]) >= 2:
+                    return
+            naive_solve(solution + [rows[i]], rows[:i] + rows[i + 1:])
+
+
+def print_solution(row_list):
+    pass
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    m = cover_matrix(diamond, big_list)
+    m = cover_matrix(checkerboard, pentominoes)
+    naive_solve([], m)
     # solutions = solve(m)
     # if not solutions:
     #    print 'No solutions.'
@@ -68,3 +85,4 @@ if __name__ == '__main__':
     #       print_board(solution)
     # print_solution(m)
     print m
+    # print_solution(row_list)
