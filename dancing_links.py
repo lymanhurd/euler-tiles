@@ -5,6 +5,8 @@ http://arxiv.org/abs/cs/0011047
 The particular application here is to use it in conjuction with a mapping frmo the tling problem,
 """
 
+import logging
+
 from node import Node, Column
 
 
@@ -21,7 +23,7 @@ def make_objects(matrix, column_names):
     last_col = header
     cur_col = last_col
     for col_idx in range(num_cols):
-        cur_col = Column(name=column_names[col_idx], size=0)
+        cur_col = Column(name=column_names[col_idx])
         # Populate the nodes in this column.
         last_node = cur_col
         cur_node = cur_col
@@ -35,6 +37,7 @@ def make_objects(matrix, column_names):
         cur_node.down = cur_col
         last_col.right = cur_col
         cur_col.left = last_col
+        cur_col.up = last_node
         last_col = cur_col
     # The very last column loops back to the header.
     cur_col.right = header
@@ -85,6 +88,7 @@ def cover_column(col):
     Args:
         col: column object to remove.
     """
+    logging.info('Covering column %s', col.name)
     col.right.left = col.left
     col.left.right = col.right
     # Loop over all 1 nodes in the column.
@@ -109,6 +113,7 @@ def uncover_column(col):
         col: column object to add.
     """
     # For each row in the column.
+    logging.info('Uncovering column %s', col.name)
     node = col.up
     while node != col:
         # For each column with a 1 in this row.
@@ -150,12 +155,14 @@ def search(head, rows=None, callback=print_rows, level=0):
         level: depth of search.
 
     """
+    logging.info('Searching level %d', level)
     if level == 0:
         rows = [None] * head.size
     if head.right == head:
         callback(rows, level)
         return
     min_col = min_column(head)
+    logging.info('Min col = %s', min_col.name)
     cover_column(min_col)
     row = min_col.down
     while row != min_col:
@@ -170,4 +177,5 @@ def search(head, rows=None, callback=print_rows, level=0):
         while col != row:
             uncover_column(col.column)
             col = col.left
+        row = row.down
     uncover_column(min_col)

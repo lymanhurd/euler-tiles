@@ -1,3 +1,5 @@
+import logging
+
 from dancing_links import make_objects, search
 
 """
@@ -16,5 +18,6 @@ example_matrix = (
 )
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     head = make_objects(example_matrix, example_column_names)
     search(head)

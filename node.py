@@ -26,6 +26,7 @@ class Column(Node):
         Node.__init__(self, left=left, right=right, up=up, down=down)
         self.size = size
         self.name = name
+        self.column = self
 
     def __repr__(self):
         return 'Column(%s)' % self.name
