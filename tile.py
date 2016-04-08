@@ -1,9 +1,6 @@
 """Utilities for manipulating Euler tiles."""
 
-import logging
-
-from boards import *
-from euler_tiles import *
+from pentominoes import *
 from symmetries import *
 
 __author__ = 'Lyman Hurd'
@@ -13,7 +10,11 @@ __author__ = 'Lyman Hurd'
 # with -1 indicating non-blank.
 def enumerate_board(board):
     """Input a list of strings of the same length representing the board and returns a tuple consisting of the count of
-    blanks and the enumerated board."""
+    blanks and the enumerated board.
+
+    Args:
+        board: Board described as a list of strings.
+    """
     enumerated = [([-1] * len(board[0])) for i in range(len(board))]
     counter = 0
     for r in range(len(board)):

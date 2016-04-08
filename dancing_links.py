@@ -15,6 +15,12 @@ def make_objects(matrix, column_names):
     num_rows = len(matrix)
     num_cols = len(matrix[0])
     assert len(column_names) == num_cols
+    # Check that every row has at least one 1 as does every column.
+    for r in matrix:
+        row_ones = len([e for e in r if e > 0])
+        assert (row_ones > 0)
+    for c in range(matrix[0]):
+        pass
     # Dict to keep track of nodes per column to fix left-right links when done.
     node_dict = {}
     # Header node is a special artificial placeholder in the list of columns.
@@ -74,6 +80,7 @@ def min_column(header):
     col = header.right
     min_col = col
     while col != header:
+        assert col.size > 0, 'Column %s has size %d.' % (col.name, col.size)
         if col.size < min_size:
             min_size = col.size
             min_col = col
@@ -132,7 +139,9 @@ def uncover_column(col):
 
 
 def print_rows(rows, level):
-    print '---'
+    sol_number = 1
+    print 'Solution: %d' % sol_number
+    sol_number += 1
     for row in rows[:level]:
         solution = [row.column.name]
         o = row.right
@@ -165,22 +174,27 @@ def search(head, rows=None, callback=print_rows, level=0):
     if head.right == head:
         callback(rows, level)
         return
+    # Find a column with a minimal number of 1's to minimize branching.
     min_col = min_column(head)
-    logging.info('Min col = %s', min_col.name)
+    logging.info('Min col = %s Size = %d', min_col.name, min_col.size)
+    # Remove this column.
     cover_column(min_col)
     row = min_col.down
     while row != min_col:
         logging.debug('Row %s', row.column.name)
         rows[level] = row
+        # By following the links we are finding every column which has a 1 in this row.
         col = row.right
         while col != row:
             cover_column(col.column)
             col = col.right
         search(head, rows, callback, level + 1)
+        # Restore the columns which were removed.
         row = rows[level]
         col = row.left
         while col != row:
             uncover_column(col.column)
             col = col.left
         row = row.down
+    # In the recursive case (level > 0) put the column back.
     uncover_column(min_col)

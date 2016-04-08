@@ -21,8 +21,8 @@ def dflip(tile):
 
 
 def symmetries(tile):
-    symmetries = [tile]
-    symmetries += [dflip(t) for t in symmetries]
-    symmetries += [hflip(t) for t in symmetries]
-    symmetries += [vflip(t) for t in symmetries]
-    return list(set(symmetries))
+    syms = [tile]
+    syms += [dflip(t) for t in syms]
+    syms += [hflip(t) for t in syms]
+    syms += [vflip(t) for t in syms]
+    return list(set(syms))
