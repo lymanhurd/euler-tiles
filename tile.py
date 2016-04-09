@@ -1,7 +1,8 @@
 """Utilities for manipulating Euler tiles."""
 
-from pentominoes import *
-from symmetries import *
+import logging
+
+import symmetries
 
 __author__ = 'Lyman Hurd'
 
@@ -44,10 +45,10 @@ def cover_matrix(board, tiles):
     matrix = []
     # reduce symmetries by truncating one tile with maximal symmetry to a single one.
     for tile_num in range(num_tiles):
-        sym_list = symmetries(tiles[tile_num])
+        sym_list = symmetries.symmetries(tiles[tile_num])
         for t in sym_list:
-            for r in range(len(board) - len(t)):
-                for c in range(len(board[0]) - len(t[0])):
+            for r in range(len(board) - len(t) + 1):
+                for c in range(len(board[0]) - len(t[0]) + 1):
                     # Will return indices of covered locations if the piece fits and [] otherwise.
                     indices = covered_indices(enumerated, t, r, c)
                     if indices:
@@ -75,15 +76,16 @@ def print_solution(row_list):
     pass
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-    m = cover_matrix(checkerboard, pentominoes)
-    naive_solve([], m)
-    # solutions = solve(m)
-    # if not solutions:
-    #    print 'No solutions.'
-    # else:
-    #   for solution in solutions:
-    #       print_board(solution)
-    # print_solution(m)
-    print m
-    # print_solution(row_list)
+    pass
+    # logging.basicConfig(level=logging.INFO)
+    # m = cover_matrix(checkerboard, pents)
+    # naive_solve([], m)
+    # # solutions = solve(m)
+    # # if not solutions:
+    # #    print 'No solutions.'
+    # # else:
+    # #   for solution in solutions:
+    # #       print_board(solution)
+    # # print_solution(m)
+    # print m
+    # # print_solution(row_list)

@@ -15,12 +15,6 @@ def make_objects(matrix, column_names):
     num_rows = len(matrix)
     num_cols = len(matrix[0])
     assert len(column_names) == num_cols
-    # Check that every row has at least one 1 as does every column.
-    for r in matrix:
-        row_ones = len([e for e in r if e > 0])
-        assert (row_ones > 0)
-    for c in range(matrix[0]):
-        pass
     # Dict to keep track of nodes per column to fix left-right links when done.
     node_dict = {}
     # Header node is a special artificial placeholder in the list of columns.
@@ -80,7 +74,6 @@ def min_column(header):
     col = header.right
     min_col = col
     while col != header:
-        assert col.size > 0, 'Column %s has size %d.' % (col.name, col.size)
         if col.size < min_size:
             min_size = col.size
             min_col = col
