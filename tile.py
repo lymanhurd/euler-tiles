@@ -1,10 +1,17 @@
-"""Utilities for manipulating Euler tiles."""
-
-import logging
+"""Utilities for manipulating tiles."""
 
 import symmetries
 
 __author__ = 'Lyman Hurd'
+
+
+class SolutionCounter():
+    def __init__(self):
+        self.count = 0
+
+    def value(self):
+        self.count += 1
+        return self.count
 
 
 # Return the number of blank spaces in the given board and a board of the same dimensions assigning each blank a number
@@ -14,7 +21,7 @@ def enumerate_board(board):
     blanks and the enumerated board.
 
     Args:
-        board: Board described as a list of strings.
+        board: Board described as a list of strings where blanks indicate legal places to place a tile.
     """
     enumerated = [([-1] * len(board[0])) for i in range(len(board))]
     counter = 0
@@ -27,6 +34,20 @@ def enumerate_board(board):
 
 
 def covered_indices(board, tile, r, c):
+    """Given an offset, an enumerated board and a tile, return a list of the locations that the tile would displace.  If
+    the tile would overlap a location with a -1, indicating an illegal position, an empty string is returned.
+
+    This method assumes that bounds checking has already been done (i.e., the tile will not leave the bounds of the
+    board).
+
+     Args:
+         board: Enumerated board described as a list of numbers where non-negaive numbers indicate legal places to
+         place.
+           a tile.
+         tile: tile to place.
+         r; row offset.
+         c: column offset.
+     """
     indices = []
     for y in range(len(tile)):
         for x in range(len(tile[0])):
@@ -39,13 +60,26 @@ def covered_indices(board, tile, r, c):
 
 
 def cover_matrix(board, tiles):
+    """Given a board, represent its tiling problem as an exact cover problem by representing a board with N spaces and
+     a set of M tiles by a sequence of rows with N + M columns.  The first N columns will have exactly one 1, indicating
+     which of the tiles is being represented, and then the 1's in the following columns will show the coordinates for
+     a single legal placement of this tile (possibly including symmetries).
+
+     Args:
+         board: A board represented as a tuple of strings of equal length.
+         tiles: an array of tiles (each one represented as a tuple of strings of equal length).
+     """
     # matrix will have as many columns as num_tiles + empty space on board
     num_tiles = len(tiles)
     num_board, enumerated = enumerate_board(board)
     matrix = []
     # reduce symmetries by truncating one tile with maximal symmetry to a single one.
     for tile_num in range(num_tiles):
-        sym_list = symmetries.syms(tiles[tile_num])
+        if tile_num > 0:
+            sym_list = symmetries.dihedral(tiles[tile_num])
+        else:
+            sym_list = [tiles[0]]
+        # sym_list = symmetries.dihedral(tiles[tile_num])
         for t in sym_list:
             for r in range(len(board) - len(t) + 1):
                 for c in range(len(board[0]) - len(t[0]) + 1):
@@ -60,32 +94,18 @@ def cover_matrix(board, tiles):
     return matrix
 
 
-def naive_solve(solution, rows):
-    logging.info(len(solution))
-    if not rows:
-        print solution
-    else:
-        for i in range(len(rows)):
-            for s in solution:
-                if max([sum(z) for z in zip(rows[i], s)]) >= 2:
-                    return
-            naive_solve(solution + [rows[i]], rows[:i] + rows[i + 1:])
-
-
-def print_solution(row_list):
-    pass
-
-if __name__ == '__main__':
-    pass
-    # logging.basicConfig(level=logging.INFO)
-    # m = cover_matrix(checkerboard, pents)
-    # naive_solve([], m)
-    # # solutions = solve(m)
-    # # if not solutions:
-    # #    print 'No solutions.'
-    # # else:
-    # #   for solution in solutions:
-    # #       print_board(solution)
-    # # print_solution(m)
-    # print m
-    # # print_solution(row_list)
+def print_tiles(board, row_list, counter):
+    print 'Solution %d:' % counter.value()
+    enumerated = enumerate_board(board)[1]
+    d = {}
+    for row in row_list:
+        solution = [row.column.name]
+        o = row.right
+        while o != row:
+            solution.append(o.column.name)
+            o = o.right
+        s = sorted(solution, reverse=True)
+        for i in s[1:]:
+            d[int(i)] = s[0]
+    string_list = [''.join([d.get(t, ' ') for t in tile_row]) for tile_row in enumerated]
+    print '\n'.join(string_list) + '\n'

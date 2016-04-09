@@ -130,16 +130,19 @@ def uncover_column(col):
     col.left.right = col
 
 
-def print_rows(rows, level):
+def print_rows(rows):
     f1 = open('soln_file', 'a')
     print >> f1, 'Solution:'
-    for row in rows[:level]:
+    assert len(rows) == 12
+    for row in rows:
         solution = [row.column.name]
         o = row.right
         while o != row:
             solution.append(o.column.name)
             o = o.right
-        print >> f1, ' '.join(sorted(solution))
+        assert len(solution) == 6
+        logging.info(solution)
+        # print >> f1, ' '.join(solution)
 
 
 def search(head, rows=None, callback=print_rows, level=0):
@@ -163,7 +166,7 @@ def search(head, rows=None, callback=print_rows, level=0):
     if level == 0:
         rows = [None] * head.size
     if head.right == head:
-        callback(rows, level)
+        callback(rows[:level])
         return
     # Find a column with a minimal number of 1's to minimize branching.
     min_col = min_column(head)

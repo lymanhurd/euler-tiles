@@ -20,7 +20,7 @@ def dflip(tile):
     return tuple(''.join(t) for t in zip(*tile))
 
 
-def syms(tile):
+def rotational(tile):
     syms = [tile]
     syms += [dflip(t) for t in syms]
     syms += [hflip(t) for t in syms]
@@ -28,8 +28,17 @@ def syms(tile):
     return list(set(syms))
 
 
-def all_syms(tiles):
-    s = []
-    for t in tiles:
-        s += syms(t)
-    return s
+def dihedral(tile):
+    syms = [tile]
+    syms += [dflip(t) for t in syms]
+    syms += [hflip(t) for t in syms]
+    syms += [vflip(t) for t in syms]
+    return list(set(syms))
+
+
+def translational(tile):
+    syms = [tile]
+    syms += [dflip(t) for t in syms]
+    syms += [hflip(t) for t in syms]
+    syms += [vflip(t) for t in syms]
+    return list(set(syms))

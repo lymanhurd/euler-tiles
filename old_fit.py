@@ -1,5 +1,3 @@
-import logging
-
 from boards import *
 from euler_tiles import *
 from symmetries import *
@@ -54,14 +52,14 @@ def print_board(b):
 def tile_8x8():
     board = ['***** ***', '        *', '         '] + ['        *'] * 6
     # board = [' ' * 8] * 8
-    sym_list = [symmetries(t) for t in big_list]
+    sym_list = [dihedral(t) for t in big_list]
     # force first element to have only one (out of 8) symmetries.
     sym_list[0] = [t7]
     fit_tiles(board, sym_list)
 
 
 def tile_diamond():
-    sym_list = [symmetries(t) for t in big_list]
+    sym_list = [dihedral(t) for t in big_list]
     # force first element to have only one (out of 8) symmetries.
     sym_list[0] = [t7]
     fit_tiles(diamond, sym_list)
@@ -69,20 +67,32 @@ def tile_diamond():
 
 def tile_4x4():
     board = [' ' * 4] * 4
-    sym_list = [symmetries(t) for t in small_list]
+    sym_list = [dihedral(t) for t in small_list]
     fit_tiles(board, sym_list)
 
 
 def tile_5x5():
     board = [' ' * 5] * 5
-    sym_list = [symmetries(t) for t in big_list[:6]]
+    sym_list = [dihedral(t) for t in big_list[:6]]
     sym_list[0] = [t7]
     fit_tiles(board, sym_list)
 
 
 def tile_16x4():
     board = tuple([' ' * 16] * 4)
-    sym_list = [symmetries(t) for t in big_list]
+    sym_list = [dihedral(t) for t in big_list]
     # force first element to have only one (out of 8) symmetries.
     sym_list[0] = [t7]
     fit_tiles(board, sym_list)
+
+
+def naive_solve(solution, rows):
+    logging.info(len(solution))
+    if not rows:
+        print solution
+    else:
+        for i in range(len(rows)):
+            for s in solution:
+                if max([sum(z) for z in zip(rows[i], s)]) >= 2:
+                    return
+            naive_solve(solution + [rows[i]], rows[:i] + rows[i + 1:])
