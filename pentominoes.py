@@ -33,19 +33,10 @@ pentZ = ('  z', 'zzz', 'z  ')
 pents = (pentF, pentI, pentL, pentP, pentN, pentT, pentU, pentV, pentW, pentX, pentY, pentZ)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.INFO)
     column_names = [p[0].lstrip()[0] for p in pents]
     matrix = cover_matrix(checkerboard, pents)
     logging.debug(matrix)
-
-    # for c in range(len(matrix[0])):
-    #     found_one = False
-    #     for r in range(len(matrix)):
-    #         if matrix[r][c] == 1:
-    #             found_one = True
-    #             break
-    #     assert found_one, '(c, r) = (%d, %d)' % (c, r)
-    #
     for i in range(len(matrix[0]) - len(column_names)):
         column_names.append(str(i))
     logging.debug(column_names)

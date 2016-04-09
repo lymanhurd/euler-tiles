@@ -88,7 +88,7 @@ def cover_column(col):
     Args:
         col: column object to remove.
     """
-    logging.info('Covering column %s', col.name)
+    logging.debug('Covering column %s size %d', col.name, col.size)
     col.right.left = col.left
     col.left.right = col.right
     # Loop over all 1 nodes in the column.
@@ -99,10 +99,10 @@ def cover_column(col):
         while row_node != col_node:
             row_node.down.up = row_node.up
             row_node.up.down = row_node.down
-            row_node = row_node.right
+            assert row_node.column.size > 0
             row_node.column.size -= 1
+            row_node = row_node.right
         col_node = col_node.down
-    col.size -= 1
 
 
 def uncover_column(col):
@@ -113,7 +113,7 @@ def uncover_column(col):
         col: column object to add.
     """
     # For each row in the column.
-    logging.info('Uncovering column %s', col.name)
+    logging.debug('Uncovering column %s', col.name)
     node = col.up
     while node != col:
         # For each column with a 1 in this row.
@@ -122,26 +122,24 @@ def uncover_column(col):
             # Reinsert the node.
             row_node.down.up = row_node
             row_node.up.down = row_node
-            row_node = row_node.left
             row_node.column.size += 1
+            row_node = row_node.left
         node = node.up
     # Reinsert the column.
     col.right.left = col
     col.left.right = col
-    col.size += 1
 
 
 def print_rows(rows, level):
-    sol_number = 1
-    print 'Solution: %d' % sol_number
-    sol_number += 1
+    f1 = open('soln_file', 'a')
+    print >> f1, 'Solution:'
     for row in rows[:level]:
         solution = [row.column.name]
         o = row.right
         while o != row:
             solution.append(o.column.name)
             o = o.right
-        print ' '.join(sorted(solution))
+        print >> f1, ' '.join(sorted(solution))
 
 
 def search(head, rows=None, callback=print_rows, level=0):
@@ -161,7 +159,7 @@ def search(head, rows=None, callback=print_rows, level=0):
         level: depth of search.
 
     """
-    logging.info('Searching level %d', level)
+    logging.debug('Searching level %d', level)
     if level == 0:
         rows = [None] * head.size
     if head.right == head:
@@ -169,12 +167,11 @@ def search(head, rows=None, callback=print_rows, level=0):
         return
     # Find a column with a minimal number of 1's to minimize branching.
     min_col = min_column(head)
-    logging.info('Min col = %s Size = %d', min_col.name, min_col.size)
+    logging.debug('Min col = %s Size = %d', min_col.name, min_col.size)
     # Remove this column.
     cover_column(min_col)
     row = min_col.down
     while row != min_col:
-        logging.debug('Row %s', row.column.name)
         rows[level] = row
         # By following the links we are finding every column which has a 1 in this row.
         col = row.right

@@ -45,7 +45,7 @@ def cover_matrix(board, tiles):
     matrix = []
     # reduce symmetries by truncating one tile with maximal symmetry to a single one.
     for tile_num in range(num_tiles):
-        sym_list = symmetries.symmetries(tiles[tile_num])
+        sym_list = symmetries.syms(tiles[tile_num])
         for t in sym_list:
             for r in range(len(board) - len(t) + 1):
                 for c in range(len(board[0]) - len(t[0]) + 1):
