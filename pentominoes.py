@@ -10,7 +10,7 @@ pentF = (' ff', 'ff ', ' f ')
 
 pentI = ('iiiii',)
 
-pentL = ('l  ', 'l  ', 'lll')
+pentL = ('l   ', 'llll')
 
 pentP = ('pp', 'pp', 'p ')
 
