@@ -1,8 +1,7 @@
 import logging
 
-from boards import lyman_board
-from dancing_links import make_objects, search
-from tile import cover_matrix, print_tiles, SolutionCounter
+from boards import jay_board
+from tile import tile_solve
 
 t1 = ('a',)
 
@@ -38,12 +37,4 @@ small_list = [t2, t3, t4, t5]
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    column_names = [p[0].lstrip()[0] for p in big_list]
-    matrix = cover_matrix(lyman_board, big_list)
-    logging.debug(matrix)
-    for i in range(len(matrix[0]) - len(column_names)):
-        column_names.append(str(i))
-    logging.debug(column_names)
-    head = make_objects(matrix, column_names)
-    counter = SolutionCounter()
-    search(head, callback=lambda r: print_tiles(lyman_board, r, counter))
+    tile_solve(big_list, jay_board)

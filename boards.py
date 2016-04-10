@@ -1,7 +1,10 @@
 # 8x8
-chess_board = tuple(8 * ['        '])
+chessboard = tuple(8 * ['        '])
 
-# This is a known solvable position for testing purposes,  It represnts an "almost" solution to the 8x8.
+# 9x9
+chessboard9 = tuple(9 * ['         '])
+
+# This is a known solvable position for testing purposes,  It represents an "almost" solution to the 8x8.
 jay_board = (
     '***** ***',
     '        *',

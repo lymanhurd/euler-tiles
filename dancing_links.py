@@ -2,12 +2,12 @@
 
 http://arxiv.org/abs/cs/0011047
 
-The particular application here is to use it in conjuction with a mapping frmo the tling problem,
+The particular application here is to use it in conjunction with a mapping from the tiling problem,
 """
 
 import logging
 
-from node import Node, Column
+from node import Node, Column, Header
 
 
 def make_objects(matrix, column_names):
@@ -18,7 +18,7 @@ def make_objects(matrix, column_names):
     # Dict to keep track of nodes per column to fix left-right links when done.
     node_dict = {}
     # Header node is a special artificial placeholder in the list of columns.
-    header = Node()
+    header = Header()
     header.size = num_cols  # Different from the paper but a convenient place to hold this value.
     last_col = header
     cur_col = last_col
@@ -70,15 +70,7 @@ def min_column(header):
     Returns:
         column object with the fewest 1's.
     """
-    min_size = 99999
-    col = header.right
-    min_col = col
-    while col != header:
-        if col.size < min_size:
-            min_size = col.size
-            min_col = col
-        col = col.right
-    return min_col
+    return min(header.right_iter(), key=lambda x: x.size)
 
 
 def cover_column(col):
@@ -89,20 +81,12 @@ def cover_column(col):
         col: column object to remove.
     """
     logging.debug('Covering column %s size %d', col.name, col.size)
-    col.right.left = col.left
-    col.left.right = col.right
+    col.h_remove()
     # Loop over all 1 nodes in the column.
-    col_node = col.down
-    while col_node != col:
-        row_node = col_node.right
-        # Remove all 1 nodes from other columns in this row.
-        while row_node != col_node:
-            row_node.down.up = row_node.up
-            row_node.up.down = row_node.down
-            assert row_node.column.size > 0
-            row_node.column.size -= 1
-            row_node = row_node.right
-        col_node = col_node.down
+    for col_node in col.down_iter():
+        for row_node in col_node.right_iter():
+            # Remove all 1 nodes from other columns in this row.
+            row_node.v_remove()
 
 
 def uncover_column(col):
@@ -114,38 +98,33 @@ def uncover_column(col):
     """
     # For each row in the column.
     logging.debug('Uncovering column %s', col.name)
-    node = col.up
-    while node != col:
+    for node in col.up_iter():
         # For each column with a 1 in this row.
-        row_node = node.left
-        while row_node != node:
+        for row_node in node.left_iter():
             # Reinsert the node.
-            row_node.down.up = row_node
-            row_node.up.down = row_node
-            row_node.column.size += 1
-            row_node = row_node.left
-        node = node.up
+            row_node.v_restore()
     # Reinsert the column.
-    col.right.left = col
-    col.left.right = col
+    col.h_restore()
 
 
 def print_rows(rows):
+    """
+    A simple default program for displaying solutions, mainly used for debugging.
+
+    Args:
+        rows: Solution expressed as a list of rows.
+    """
     f1 = open('soln_file', 'a')
     print >> f1, 'Solution:'
-    assert len(rows) == 12
     for row in rows:
         solution = [row.column.name]
-        o = row.right
-        while o != row:
+        for o in row.right_iter():
             solution.append(o.column.name)
-            o = o.right
-        assert len(solution) == 6
         logging.info(solution)
-        # print >> f1, ' '.join(solution)
+        print >> f1, ' '.join(solution)
 
 
-def search(head, rows=None, callback=print_rows, level=0):
+def search(header, rows=None, callback=print_rows, level=0):
     """
     Recursively solve the exact cover problem, which is given a matrix of 0's and 1's, find a subset of the rows such
     that every column has one and only one 1, or report that no such solution exists.  The arguments consist of the
@@ -156,38 +135,34 @@ def search(head, rows=None, callback=print_rows, level=0):
     double (and circularly) linked list of nodes corresponding to the 1's.
 
     Args:
-        head: Original matrix, a linked list of rows objects.
+        header: Original matrix, a linked list of rows objects.
         rows: Solution so far expressed as a list of rows.
         callback: function to which we report a solution.
         level: depth of search.
-
     """
     logging.debug('Searching level %d', level)
     if level == 0:
-        rows = [None] * head.size
-    if head.right == head:
+        rows = [None] * header.size
+    # if level == 13:
+    #     callback(rows[:level])
+    #     return
+    if header.right == header:
         callback(rows[:level])
         return
     # Find a column with a minimal number of 1's to minimize branching.
-    min_col = min_column(head)
+    min_col = min_column(header)
     logging.debug('Min col = %s Size = %d', min_col.name, min_col.size)
     # Remove this column.
     cover_column(min_col)
-    row = min_col.down
-    while row != min_col:
+    for row in min_col.down_iter():
         rows[level] = row
         # By following the links we are finding every column which has a 1 in this row.
-        col = row.right
-        while col != row:
+        for col in row.right_iter():
             cover_column(col.column)
-            col = col.right
-        search(head, rows, callback, level + 1)
+        search(header, rows, callback, level + 1)
         # Restore the columns which were removed.
         row = rows[level]
-        col = row.left
-        while col != row:
+        for col in row.left_iter():
             uncover_column(col.column)
-            col = col.left
-        row = row.down
     # In the recursive case (level > 0) put the column back.
     uncover_column(min_col)

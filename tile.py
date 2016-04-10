@@ -1,6 +1,9 @@
 """Utilities for manipulating tiles."""
 
+import logging
+
 import symmetries
+from dancing_links import make_objects, search
 
 __author__ = 'Lyman Hurd'
 
@@ -109,3 +112,25 @@ def print_tiles(board, row_list, counter):
             d[int(i)] = s[0]
     string_list = [''.join([d.get(t, ' ') for t in tile_row]) for tile_row in enumerated]
     print '\n'.join(string_list) + '\n'
+
+
+def tile_solve(tile_set, board):
+    # The errors produced if the tiles or the board are not rectangles will be hard to diagnose if the calculation is
+    # allowed to proceed.
+    assert isRectangle(board)
+    for t in tile_set:
+        assert isRectangle(t)
+    column_names = [p[0].lstrip()[0] for p in tile_set]
+    matrix = cover_matrix(board, tile_set)
+    logging.debug(matrix)
+    for i in range(len(matrix[0]) - len(column_names)):
+        column_names.append(str(i))
+    logging.debug(column_names)
+    head = make_objects(matrix, column_names)
+    counter = SolutionCounter()
+    search(head, callback=lambda r: print_tiles(board, r, counter))
+
+
+def isRectangle(m):
+    s = [len(t) for t in m]
+    return min(s) == max(s)
