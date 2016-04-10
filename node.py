@@ -81,5 +81,33 @@ class Column(Node):
 
 
 class Header(Column):
-    def __init__(self):
+    def __init__(self, num_cols=0):
         Column.__init__(self, size=0, name='Header')
+        self.num_cols = num_cols
+
+
+# Static utilities...
+
+
+def link_left_right(node_list):
+    num_elements = len(node_list)
+    for i in range(num_elements):
+        node_list[i].right = node_list[i + 1 % num_elements]
+        node_list[i + 1 % num_elements].left = node_list[i]
+
+
+def link_up_down(node_list):
+    num_elements = len(node_list)
+    for i in range(num_elements):
+        node_list[i].down = node_list[i + 1 % num_elements]
+        node_list[i + 1 % num_elements].up = node_list[i]
+
+
+def create_columns(column_labels):
+    columns = [Header(len(column_labels))] + [Column(name=label) for label in column_labels]
+    link_left_right(columns)
+    return columns
+
+
+def create_node_array(rows, columns):
+    pass

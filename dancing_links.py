@@ -18,8 +18,7 @@ def make_objects(matrix, column_names):
     # Dict to keep track of nodes per column to fix left-right links when done.
     node_dict = {}
     # Header node is a special artificial placeholder in the list of columns.
-    header = Header()
-    header.size = num_cols  # Different from the paper but a convenient place to hold this value.
+    header = Header(num_cols)
     last_col = header
     cur_col = last_col
     for col_idx in range(num_cols):
@@ -142,7 +141,7 @@ def search(header, rows=None, callback=print_rows, level=0):
     """
     logging.debug('Searching level %d', level)
     if level == 0:
-        rows = [None] * header.size
+        rows = [None] * header.num_cols
     # if level == 13:
     #     callback(rows[:level])
     #     return
