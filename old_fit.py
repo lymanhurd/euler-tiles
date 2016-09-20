@@ -1,6 +1,6 @@
-from boards import *
-from euler_tiles import *
-from symmetries import *
+from euler_tiles.euler_boards import *
+from euler_tiles.euler_tiles import *
+from tile_solver.symmetries import *
 
 
 # Determine if a specific tile can fit onto the board at a specific position.  The call has no range checking,

@@ -3,7 +3,7 @@
 import logging
 
 import symmetries
-from dancing_links import make_objects, search
+from dancing_links.links import make_objects, search
 
 __author__ = 'Lyman Hurd'
 

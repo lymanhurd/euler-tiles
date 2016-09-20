@@ -139,14 +139,11 @@ def search(header, rows=None, callback=print_rows, level=0):
         callback: function to which we report a solution.
         level: depth of search.
     """
+    if rows == None:
+        rows = []
     logging.debug('Searching level %d', level)
-    if level == 0:
-        rows = [None] * header.num_cols
-    # if level == 13:
-    #     callback(rows[:level])
-    #     return
     if header.right == header:
-        callback(rows[:level])
+        callback(rows)
         return
     # Find a column with a minimal number of 1's to minimize branching.
     min_col = min_column(header)
@@ -154,7 +151,10 @@ def search(header, rows=None, callback=print_rows, level=0):
     # Remove this column.
     cover_column(min_col)
     for row in min_col.down_iter():
-        rows[level] = row
+        if level < len(rows):
+            rows[level] = row
+        else:
+            rows.append(row)
         # By following the links we are finding every column which has a 1 in this row.
         for col in row.right_iter():
             cover_column(col.column)

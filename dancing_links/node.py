@@ -1,7 +1,7 @@
 """
 This class represents the 1's in the matrix.  The Nodes are formed into circularly linked lists to make rows (i.e.,
 joined by Left/Right and vertically linked lists to make columns.  In addition, each node contains a link to the column
-which contains it.  For the purposes of the algorithm, rows all are treated symetrically and therefore do not need to
+which contains it.  For the purposes of the algorithm, rows all are treated symmetrically and therefore do not need to
 be tracked.
 """
 
@@ -109,5 +109,5 @@ def create_columns(column_labels):
     return columns
 
 
-def create_node_array(rows, columns):
-    pass
+def create_node_array(rows, column_labels):
+    column_array = create_columns(column_labels)

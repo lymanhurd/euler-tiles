@@ -1,7 +1,7 @@
 import logging
 
-from boards import checkerboard
-from tile import tile_solve
+from euler_tiles.euler_boards import checkerboard
+from tile_solver.tile import tile_solve
 
 # The pentominoes here for benchmarking since the solution counts are well established.
 

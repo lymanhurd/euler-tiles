@@ -1,6 +1,6 @@
 import logging
 
-from dancing_links import make_objects, search
+from links import make_objects, search
 
 """
 The sample data structure in Knuth's paper reproduced for testing.

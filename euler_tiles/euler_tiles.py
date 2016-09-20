@@ -1,7 +1,7 @@
 import logging
 
-from boards import jay_board
-from tile import tile_solve
+from euler_boards import jay_board
+from tile_solver.tile import tile_solve
 
 t1 = ('a',)
 
