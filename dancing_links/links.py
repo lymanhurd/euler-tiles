@@ -139,7 +139,7 @@ def search(header, rows=None, callback=print_rows, level=0):
         callback: function to which we report a solution.
         level: depth of search.
     """
-    if rows == None:
+    if rows is None:
         rows = []
     logging.debug('Searching level %d', level)
     if header.right == header:

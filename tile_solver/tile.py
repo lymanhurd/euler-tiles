@@ -44,9 +44,8 @@ def covered_indices(board, tile, r, c):
     board).
 
      Args:
-         board: Enumerated board described as a list of numbers where non-negaive numbers indicate legal places to
-         place.
-           a tile.
+         board: Enumerated board described as a list of numbers where non-negative numbers indicate legal places to
+         place a tile.
          tile: tile to place.
          r; row offset.
          c: column offset.
@@ -71,6 +70,9 @@ def cover_matrix(board, tiles):
      Args:
          board: A board represented as a tuple of strings of equal length.
          tiles: an array of tiles (each one represented as a tuple of strings of equal length).
+
+     Returns:
+        The 0-1 matrix whose cover problem is equivalent to the given tiling.
      """
     # matrix will have as many columns as num_tiles + empty space on board
     num_tiles = len(tiles)
