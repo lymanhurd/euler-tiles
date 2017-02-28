@@ -4,7 +4,8 @@ chessboard = tuple(8 * ['        '])
 # 9x9
 chessboard9 = tuple(9 * ['         '])
 
-# This is a known solvable position for testing purposes,  It represents an "almost" solution to the 8x8.
+# This is a known solvable position for testing purposes,  It represents an
+# "almost" solution to the 8x8.
 jay_board = (
     '***** ***',
     '        *',

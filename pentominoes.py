@@ -3,7 +3,8 @@ import logging
 from euler_tiles.euler_boards import checkerboard
 from tile_solver.tile import tile_solve
 
-# The pentominoes here for benchmarking since the solution counts are well established.
+# The pentominoes here for benchmarking since the solution counts are well
+# established.
 
 pentF = (' ff', 'ff ', ' f ')
 
@@ -29,7 +30,8 @@ pentY = ('  y ', 'yyyy')
 
 pentZ = ('  z', 'zzz', 'z  ')
 
-pents = (pentF, pentI, pentL, pentP, pentN, pentT, pentU, pentV, pentW, pentX, pentY, pentZ)
+pents = (pentF, pentI, pentL, pentP, pentN, pentT, pentU, pentV, pentW, pentX,
+         pentY, pentZ)
 
 
 if __name__ == '__main__':

@@ -24,6 +24,8 @@ crosses = (cross,)
 
 
 # There are 4 corners, 4 ends, 1 straight, 4 tees, 3 crosses in the tile set.
+d8tiles = (corners,) * 4 + (ends,) * 4 + (straights,) + (tees,) * 4 + (
+                                                                      crosses,) * 3
 
 # The matrix has 16 columns indicating the piece and 64 columns indicating legal placements.
 
@@ -63,7 +65,16 @@ def tile_rows(tile, tile_number):
     return rows
 
 
+def d8matrix():
+    m = []
+    for i in range(16):
+        for t in d8tiles[i]:
+            m += tile_rows(t, i)
+    return m
+
+
 if __name__ == '__main__':
-    rows = tile_rows(cross, 0)
-    for r in rows:
-        print r
+    matrix = d8matrix()
+    print len(matrix)
+    # for r in matrix:
+    #     print r

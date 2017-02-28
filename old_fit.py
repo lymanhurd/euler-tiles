@@ -18,8 +18,8 @@ def merge(board, tile, i, j):
     prepad = ' ' * i
     postpad = ' ' * (len(board[0]) - len(tile[0]) - i)
     return (board[:j] +
-            [merge_lines(board[j + y], prepad + tile[y] + postpad) for y in range(len(tile))] +
-            board[j + len(tile):])
+            [merge_lines(board[j + y], prepad + tile[y] + postpad) for y
+             in range(len(tile))] + board[j + len(tile):])
 
 
 def merge_lines(x, y):

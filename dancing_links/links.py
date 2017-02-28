@@ -1,8 +1,10 @@
-"""Implementation of Knuth's Dancing Links (DLX algorithm) for solving the exact cover problem see:
+"""Implementation of Knuth's Dancing Links (DLX algorithm) for solving the
+exact cover problem see:
 
 http://arxiv.org/abs/cs/0011047
 
-The particular application here is to use it in conjunction with a mapping from the tiling problem,
+The particular application here is to use it in conjunction with a mapping
+from the tiling problem,
 """
 
 import logging
@@ -108,7 +110,8 @@ def uncover_column(col):
 
 def print_rows(rows):
     """
-    A simple default program for displaying solutions, mainly used for debugging.
+    A simple default program for displaying solutions, mainly used for
+    debugging.
 
     Args:
         rows: Solution expressed as a list of rows.
@@ -125,13 +128,15 @@ def print_rows(rows):
 
 def search(header, rows=None, callback=print_rows, level=0):
     """
-    Recursively solve the exact cover problem, which is given a matrix of 0's and 1's, find a subset of the rows such
-    that every column has one and only one 1, or report that no such solution exists.  The arguments consist of the
-    original matrix and the set of rows found so far.  When A becomes empty, we report the result to the callback (where
-    we can print/save).
+    Recursively solve the exact cover problem, which is given a matrix of 0's
+    and 1's, find a subset of the rows such that every column has one and only
+    one 1, or report that no such solution exists.  The arguments consist of
+    the original matrix and the set of rows found so far.  When A becomes
+    empty, we report the result to the callback (where we can print/save).
 
-    In keeping with Knuth's paper, the matrices are represented as a doubly linked list of rows each of which is a
-    double (and circularly) linked list of nodes corresponding to the 1's.
+    In keeping with Knuth's paper, the matrices are represented as a doubly
+    linked list of rows each of which is a double (and circularly) linked list
+    of nodes corresponding to the 1's.
 
     Args:
         header: Original matrix, a linked list of rows objects.
@@ -155,7 +160,8 @@ def search(header, rows=None, callback=print_rows, level=0):
             rows[level] = row
         else:
             rows.append(row)
-        # By following the links we are finding every column which has a 1 in this row.
+        # By following the links we are finding every column which has a 1 in
+        # this row.
         for col in row.right_iter():
             cover_column(col.column)
         search(header, rows, callback, level + 1)
