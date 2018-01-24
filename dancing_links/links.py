@@ -6,6 +6,7 @@ http://arxiv.org/abs/cs/0011047
 The particular application here is to use it in conjunction with a mapping
 from the tiling problem,
 """
+from __future__ import print_function
 
 import logging
 
@@ -110,20 +111,19 @@ def uncover_column(col):
 
 def print_rows(rows):
     """
-    A simple default program for displaying solutions, mainly used for
-    debugging.
+    A simple default program for displaying solutions, used for debugging.
 
     Args:
         rows: Solution expressed as a list of rows.
     """
     f1 = open('soln_file', 'a')
-    print >> f1, 'Solution:'
+    print('Solution:', file=f1)
     for row in rows:
         solution = [row.column.name]
         for o in row.right_iter():
             solution.append(o.column.name)
         logging.info(solution)
-        print >> f1, ' '.join(solution)
+        print(' '.join(solution), file=f1)
 
 
 def search(header, rows=None, callback=print_rows, level=0):
@@ -146,7 +146,7 @@ def search(header, rows=None, callback=print_rows, level=0):
     """
     if rows is None:
         rows = []
-    logging.debug('Searching level %d', level)
+    logging.debug('Searching level %d len rows = %d', level, len(rows))
     if header.right == header:
         callback(rows)
         return
