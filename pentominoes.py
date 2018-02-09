@@ -35,5 +35,5 @@ pents = (pentF, pentI, pentL, pentP, pentN, pentT, pentU, pentV, pentW, pentX,
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     tile_solve(pents, checkerboard)

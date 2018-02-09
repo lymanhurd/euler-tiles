@@ -8,12 +8,14 @@ rows all are treated symmetrically and therefore do not need to be tracked.
 
 
 class Node:
-    def __init__(self, left=None, right=None, up=None, down=None, column=None):
+    def __init__(self, left=None, right=None, up=None, down=None, column=None,
+                 description=None):
         self.left = left
         self.right = right
         self.up = up
         self.down = down
         self.column = column
+        self.description = description
 
     def __repr__(self):
         if self.column:
@@ -22,7 +24,7 @@ class Node:
             return 'Node'
 
     # The central "point" of Knuth's paper is the fact that if you do not
-    # destroy of alter an object removed from a circularly linked list, you
+    # destroy or alter an object removed from a circularly linked list, you
     # can put it back in constant time which greatly facilitates
     # back-tracking.
     def v_remove(self):

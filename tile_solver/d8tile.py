@@ -79,7 +79,7 @@ def d8_matrix(tiles):
 
 def print_tiles(row_list, counter):
     print('Solution %d:' % counter.value())
-    print(row_list)
+    print([r.description for r in row_list])
 
 
 def d8_solve():
@@ -108,21 +108,28 @@ border4 = (1,
            1, 0)
 
 
-def d4_matrix(tiles):
+def d4_matrix(tiles, width):
     m = [border4]
+    d = ['border']
     for i in range(len(tiles)):
         for t in tiles[i]:
-            m += tile_rows(t, i)
-    return m
+            rows, row_names = tile_rows(t, i, len(tiles), width)
+            m += rows
+            d += row_names
+    return m, d
 
 
 def shorten(row):
     return [row[s[0]] | row[s[1]] for s in shorten_indices]
 
 
+def tile_name(t, pos):
+    return ''.join(['OX'[i] for i in t[0:8:2]]) + str(pos)
+
+
 # The matrix has NUM_TILES columns indicating the piece and
 # 8 * WIDTH * HEIGHT columns indicating legal placements.
-def tile_rows(tile, tile_number, num_tiles=4, width=2, height=2):
+def tile_rows(tile, tile_number, num_tiles, width):
     """Return the rows for a given tile in a given orientation.
 
     Args:
@@ -136,28 +143,30 @@ def tile_rows(tile, tile_number, num_tiles=4, width=2, height=2):
     prefix = [0] * (num_tiles + 1)
     prefix[tile_number + 1] = 1
     rows = []
-    for pos in range(width * height):
+    row_names = []
+    for pos in range(width * width):
         # Eliminate tiles that would protrude towards the top or left edge.
         if pos / width == 0 and tile[0] == 1:  # top is black
             continue
         if pos % width == 0 and tile[6] == 1:  # left is black
             continue
         row = prefix + shorten((pos * 8 * [0]) + list(tile) +
-                               (width * height - pos - 1) * 8 * [0])
+                               (width * width - pos - 1) * 8 * [0])
         rows.append(tuple(row))
-    return rows
+        row_names.append(tile_name(tile, pos))
+    return rows, row_names
 
 
-def d4_solve():
-    matrix = d4_matrix(end_tiles)
-    head = make_objects(matrix, range(len(matrix[0])))
+def d4_solve(tiles, width):
+    matrix, row_names = d4_matrix(tiles, width)
+    head = make_objects(matrix, row_names)
     counter = tile_solver.tile.SolutionCounter()
     search(head, callback=lambda r: print_tiles(r, counter))
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    d = d4_matrix(corner_tiles)
+    logging.basicConfig(level=logging.INFO)
+    # d = d4_matrix(corner_tiles)
     # for c in range(len(d[0])):
     #     print c - 5, sum([r[c] for r in d])
-    d4_solve()
+    d4_solve(end_tiles, 2)

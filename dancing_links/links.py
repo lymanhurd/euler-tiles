@@ -13,11 +13,10 @@ import logging
 from node import Node, Column, Header
 
 
-def make_objects(matrix, column_names):
+def make_objects(matrix, row_names):
     # Not checking for a square or non-empty matrix but that would be bad.
     num_rows = len(matrix)
     num_cols = len(matrix[0])
-    assert len(column_names) == num_cols
     # Dict to keep track of nodes per column to fix left-right links when done.
     node_dict = {}
     # Header node is a special artificial placeholder in the list of columns.
@@ -25,13 +24,14 @@ def make_objects(matrix, column_names):
     last_col = header
     cur_col = last_col
     for col_idx in range(num_cols):
-        cur_col = Column(name=column_names[col_idx])
+        cur_col = Column(name=col_idx)
         # Populate the nodes in this column.
         last_node = cur_col
         cur_node = cur_col
         for row_idx in range(num_rows):
             if matrix[row_idx][col_idx]:
-                cur_node = Node(column=cur_col, up=last_node)
+                cur_node = Node(column=cur_col, up=last_node,
+                                description=row_names[row_idx])
                 node_dict[(row_idx, col_idx)] = cur_node
                 last_node.down = cur_node
                 last_node = cur_node
@@ -155,7 +155,13 @@ def search(header, rows=None, callback=print_rows, level=0):
     logging.debug('Min col = %s Size = %d', min_col.name, min_col.size)
     # Remove this column.
     cover_column(min_col)
+    column_descriptions = set()
     for row in min_col.down_iter():
+        logging.debug('Level %d Description %s', level, row.description)
+        if row.description is not None and row.description in \
+                column_descriptions:
+            continue
+        column_descriptions.add(row.description)
         if level < len(rows):
             rows[level] = row
         else:
