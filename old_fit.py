@@ -89,7 +89,7 @@ def tile_16x4():
 def naive_solve(solution, rows):
     logging.info(len(solution))
     if not rows:
-        print solution
+        print(solution)
     else:
         for i in range(len(rows)):
             for s in solution:

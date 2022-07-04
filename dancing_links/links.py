@@ -6,14 +6,12 @@ http://arxiv.org/abs/cs/0011047
 The particular application here is to use it in conjunction with a mapping
 from the tiling problem,
 """
-from __future__ import print_function
-
 import logging
 
-from node import Node, Column, Header
+from dancing_links.node import Node, Column, Header
 
 
-def make_objects(matrix, col_names):
+def make_objects(matrix, row_names):
     # Not checking for a square or non-empty matrix but that would be bad.
     num_rows = len(matrix)
     num_cols = len(matrix[0])
@@ -31,7 +29,7 @@ def make_objects(matrix, col_names):
         for row_idx in range(num_rows):
             if matrix[row_idx][col_idx]:
                 cur_node = Node(column=cur_col, up=last_node,
-                                description=col_names[col_idx])
+                                description=row_names[row_idx])
                 node_dict[(row_idx, col_idx)] = cur_node
                 last_node.down = cur_node
                 last_node = cur_node
@@ -116,14 +114,9 @@ def print_rows(rows):
     Args:
         rows: Solution expressed as a list of rows.
     """
-    f1 = open('soln_file', 'a')
-    print('Solution:', file=f1)
+    print(f'Solution:')
     for row in rows:
-        solution = [row.column.name]
-        for o in row.right_iter():
-            solution.append(o.column.name)
-        logging.info(solution)
-        print(' '.join(solution), file=f1)
+        print(row.description)
 
 
 def search(header, rows=None, callback=print_rows, level=0):

@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 __author__ = 'lhurd'
 
 import logging
@@ -75,6 +73,7 @@ def doris_matrix():
             for t in rotations(d_tiles[3]):
                 row = (NUM_TILES + NUM_EDGES * NUM_COLORS) * [0]
                 row[i] = 1
+                # TODO - fix this!
                 if pos[0] != -1:
                     row[NUM_TILES + NUM_COLORS * pos[0]:
                     NUM_TILES + NUM_COLORS * pos[0] + 3] = PATTERNS[3 + t[0]]
