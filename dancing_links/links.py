@@ -13,7 +13,7 @@ import logging
 from node import Node, Column, Header
 
 
-def make_objects(matrix, row_names):
+def make_objects(matrix, col_names):
     # Not checking for a square or non-empty matrix but that would be bad.
     num_rows = len(matrix)
     num_cols = len(matrix[0])
@@ -31,7 +31,7 @@ def make_objects(matrix, row_names):
         for row_idx in range(num_rows):
             if matrix[row_idx][col_idx]:
                 cur_node = Node(column=cur_col, up=last_node,
-                                description=row_names[row_idx])
+                                description=col_names[col_idx])
                 node_dict[(row_idx, col_idx)] = cur_node
                 last_node.down = cur_node
                 last_node = cur_node

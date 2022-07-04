@@ -37,7 +37,7 @@ class Node:
         self.up.down = self
         self.column.size += 1
 
-    # Horizontal traversla is only ever undertaken starting at column objects,
+    # Horizontal traversal is only ever undertaken starting at column objects,
     # but for symmetry the method is also defined in the Node class.
     def h_remove(self):
         self.right.left = self.left

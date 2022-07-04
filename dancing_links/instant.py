@@ -1,6 +1,5 @@
 import logging
-
-# from dancing_links.links import make_objects, search
+from links import make_objects, search
 
 RED = (1, 0, 0, 0)
 GREEN = (0, 1, 0, 0)
@@ -38,7 +37,6 @@ def initialize_matrix():
         for j in range(24):
             matrix_entry = generate_row(i, show_colors(j, i))
             result.append(matrix_entry)
-            print(matrix_entry)
     return result
 
 
@@ -57,7 +55,6 @@ def generate_row(cube, faces):
     row[cube] = 1
     for i in faces:
         row += COLORS[i]
-        print(row)
     return row
 
 
@@ -86,17 +83,17 @@ def print_solution(rows):
     logging.info('Found solution.')
 
 
-if __name__ == '__main__':
-    # matrix = [[[1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] for i in range(10)] for j in range(10)]
-    faces = show_colors(4, 2)
-    row = generate_row(3, faces)
-    display_row(row)
-    # check_for_3(matrix)
-    matrix = initialize_matrix()
-
 # if __name__ == '__main__':
-#     logging.basicConfig(level=logging.INFO)
-#     iim = initialize_matrix()
-#     head = make_objects(iim, range(len(iim[0])))
-#     search(head, callback=print_solution)
-#     print('Done')
+#     # matrix = [[[1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] for i in range(10)] for j in range(10)]
+#     faces = show_colors(0, 0)
+#     row = generate_row(3, faces)
+#     display_row(row)
+#     # check_for_3(matrix)
+#     matrix = initialize_matrix()
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    iim = initialize_matrix()
+    head = make_objects(iim, list(range(len(iim[0]))))
+    search(head, callback=print_solution)
+    print('Done')
